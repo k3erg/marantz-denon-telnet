@@ -1,12 +1,12 @@
 # marantz-denon-telnet
 npm package to control marantz and Denon AVR over good ol' telnet.
 
-# What does this package do?
+## What does this package do?
 This package allows to control your marantz or Denon AVR over telnet.
 
 ## How to Install this package?
 npm install marantz-denon-telnet
-
+a
 
 ## How to use this package?
 
@@ -14,7 +14,7 @@ npm install marantz-denon-telnet
 
 
 
-var MarantzDenonTelnet = require('./lib/marantz-denon-telnet');
+var MarantzDenonTelnet = require('marantz-denon-telnet');
 /**
     Returns an instance of MarantzDenonTelnet that can handle telnet commands to the given IP.
     @constructor
