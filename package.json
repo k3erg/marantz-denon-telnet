@@ -1,0 +1,25 @@
+{
+  "name": "marantz-denon-telnet",
+  "version": "0.0.1",
+  "description": "npm package to control marantz and Denon AVR over good ol' telnet.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/k3erg/marantz-denon-telnet.git"
+  },
+  "keywords": [
+    "marantz",
+    "denon",
+    "telnet",
+    "remote"
+  ],
+  "author": "Mike Kronenberg <mike.kronenberg@kronenberg.org> (http://www.kronenberg.org)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/k3erg/marantz-denon-telnet/issues"
+  },
+  "homepage": "https://github.com/k3erg/marantz-denon-telnet#readme"
+}
