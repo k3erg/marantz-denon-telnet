@@ -1,6 +1,6 @@
 {
   "name": "marantz-denon-telnet",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "npm package to control marantz and Denon AVR over good ol' telnet.",
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,7 @@
   "keywords": [
     "marantz",
     "denon",
+    "avr",
     "telnet",
     "remote"
   ],

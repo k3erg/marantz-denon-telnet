@@ -4,7 +4,7 @@ npm package to control marantz and Denon AVR over good ol' telnet.
 
 
 ## What does this package do?
-This package allows to control your marantz or Denon AVR over telnet. It was written to support the homebridge-marantz-denon-telnet package. You might like the use the marantz-denon-upnpdiscovery package as well, if you don't want to lookup your AVR's IP address by hand.
+This package allows to control your marantz or Denon AVR over telnet. It was written to support the homebridge-marantz-denon-telnet package. You might want to install the marantz-denon-upnpdiscovery package as well, if you don't like to lookup your AVR's IP address by hand.
 
 
 
