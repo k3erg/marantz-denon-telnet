@@ -233,7 +233,7 @@ MarantzDenonTelnet.prototype.setVolume = function(volume, callback) {
     }
     this.telnet('MV' + vol, function(error, data) {
         if (!error) {
-            callback(null);
+            callback(null, volume);
         } else {
             callback(error);
         }
