@@ -97,7 +97,7 @@ MarantzDenonTelnet.prototype.cmd = function(cmd, callback) {
 
 
 /**
-    Get the currently selected input of the AVR. Possible values are:
+    Get the currently selected input of the AVR's MAIN ZONE. Possible values are:
     'CD', 'SPOTIFY', 'CBL/SAT', 'DVD', 'BD', 'GAME', 'GAME2', 'AUX1',
     'MPLAY', 'USB/IPOD', 'TUNER', 'NETWORK', 'TV', 'IRADIO', 'SAT/CBL', 'DOCK',
     'IPOD', 'NET/USB', 'RHAPSODY', 'PANDORA', 'LASTFM', 'IRP', 'FAVORITES', 'SERVER'
@@ -117,7 +117,7 @@ MarantzDenonTelnet.prototype.getInput = function(callback) {
 
 
 /**
-    Select the input of the AVR. Possible values are:
+    Select the input of the AVR's MAIN ZONE. Possible values are:
     'CD', 'SPOTIFY', 'CBL/SAT', 'DVD', 'BD', 'GAME', 'GAME2', 'AUX1',
     'MPLAY', 'USB/IPOD', 'TUNER', 'NETWORK', 'TV', 'IRADIO', 'SAT/CBL', 'DOCK',
     'IPOD', 'NET/USB', 'RHAPSODY', 'PANDORA', 'LASTFM', 'IRP', 'FAVORITES', 'SERVER'
@@ -137,13 +137,13 @@ MarantzDenonTelnet.prototype.setInput = function(input, callback) {
 
 
 /**
-    Returns the current mute state of the AVR
+    Returns the current mute state of the AVR's MAIN ZONE.
     @param {Function} callback
  */
 MarantzDenonTelnet.prototype.getMuteState = function(callback) {
     this.telnet('MU?', function(error, data) {
         if (!error) {
-            callback(null, (data[0].substring(2) == 'ON'));
+            callback(null, (data[0] == 'PWON'));
         } else {
             callback(error);
         }
@@ -153,7 +153,24 @@ MarantzDenonTelnet.prototype.getMuteState = function(callback) {
 
 
 /**
-    Returns the current power state of the AVR.
+    set the mute state of the AVR's MAIN ZONE.
+    @param {boolean} muteState
+    @param {Function} callback
+ */
+MarantzDenonTelnet.prototype.setMuteState = function(muteState, callback) {
+    this.telnet('MU' + (muteState ? 'ON' : 'OFF'), function(error, data) {
+        if (!error) {
+            callback(null, muteState);
+        } else {
+            callback(error);
+        }
+    });
+};
+
+
+
+/**
+    Returns the current power state of the AVR's MAIN ZONE.
     @param {Function} callback
  */
 MarantzDenonTelnet.prototype.getPowerState = function(callback) {
@@ -169,15 +186,14 @@ MarantzDenonTelnet.prototype.getPowerState = function(callback) {
 
 
 /**
-    Sets the power state of the AVR.
+    Sets the power state of the AVR's MAIN ZONE.
     @param {boolean} powerState - true or false
     @param {Function} callback
  */
 MarantzDenonTelnet.prototype.setPowerState = function(powerState, callback) {
-    powerState = (powerState) ? 'ON' : 'OFF';
-    this.telnet('PW' + powerState, function(error, data) {
+    this.telnet('PW' + (powerState ? 'ON' : 'OFF'), function(error, data) {
         if (!error) {
-            callback(null, powerState == 'ON');
+            callback(null, powerState);
         } else {
             callback(error);
         }
@@ -187,41 +203,7 @@ MarantzDenonTelnet.prototype.setPowerState = function(powerState, callback) {
 
 
 /**
-    Returns the current mute state of the AVR.
-    @param {Function} callback
- */
-MarantzDenonTelnet.prototype.getMuteState = function(callback) {
-    this.telnet('MU?', function(error, data) {
-        if (!error) {
-            callback(null, (data[0] == 'PWON'));
-        } else {
-            callback(error);
-        }
-    });
-};
-
-
-
-/**
-    set the mute state of the AVR.
-    @param {boolean} muteState
-    @param {Function} callback
- */
-MarantzDenonTelnet.prototype.setMuteState = function(muteState, callback) {
-    muteState = (muteState) ? 'ON' : 'OFF';
-    this.telnet('MU' + muteState, function(error, data) {
-        if (!error) {
-            callback(null, muteState == 'ON');
-        } else {
-            callback(error);
-        }
-    });
-};
-
-
-
-/**
-    Returns the current volume of the AVR (with volume fix)
+    Returns the current volume of the AVR's MAIN ZONE (with volume fix)
     @param {Function} callback
  */
 MarantzDenonTelnet.prototype.getVolume = function(callback) {
@@ -237,7 +219,7 @@ MarantzDenonTelnet.prototype.getVolume = function(callback) {
 
 
 /**
-    Set the playback volume.
+    Set the playback volume of the AVR's MAIN ZONE.
     The volume fix sets the volume to the volume the display shows
     @param {number} volume
     @param {Function} callback
