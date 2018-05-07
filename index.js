@@ -191,7 +191,7 @@ MarantzDenonTelnet.prototype.getPowerState = function(callback) {
     @param {Function} callback
  */
 MarantzDenonTelnet.prototype.setPowerState = function(powerState, callback) {
-    this.telnet('PW' + (powerState ? 'ON' : 'OFF'), function(error, data) {
+    this.telnet('PW' + (powerState ? 'ON' : 'STANDBY'), function(error, data) {
         if (!error) {
             callback(null, powerState);
         } else {
