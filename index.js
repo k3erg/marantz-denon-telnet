@@ -1,6 +1,5 @@
 /**
     @fileoverview Control marantz and Denon AVR's by telnet.
-     Blablabla
 
     @author Mike Kronenberg <mike.kronenberg@kronenberg.org> (http://www.kronenberg.org)
     @license MIT
@@ -95,7 +94,7 @@ MarantzDenonTelnet.prototype.sendNextTelnetCueItem = function() {
                     data = {};
                     error = null;
                 }
-                console.log('   sent: ' + item.cmd + (error ? ' error: ' + error.message : ' received: ' + JSON.stringify(data)));
+//                console.log('   sent: ' + item.cmd + (error ? ' error: ' + error.message : ' received: ' + JSON.stringify(data)));
                 item.callback(error, data);
                 mdt.sendNextTelnetCueItem();
             });
@@ -128,8 +127,8 @@ MarantzDenonTelnet.prototype.telnet = function(cmd, callback) {
     @param {string} cmd Telnet command
     @param {defaultCallback} callback Function to be called when the command is run, and data returned
     @example
-    var mdt = new MarantzDenonTelnet('127.0.0.1');
-    mdt.cmd('PW?' function(error, data) {console.log('Power is: ' + data);});
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.cmd('PW?' function(error, data) {console.log('Power is: ' + data);});
  */
 MarantzDenonTelnet.prototype.cmd = function(cmd, callback) {
     this.telnet(cmd, function(error, data) {
@@ -150,6 +149,9 @@ MarantzDenonTelnet.prototype.cmd = function(cmd, callback) {
     'MPLAY', 'USB/IPOD', 'TUNER', 'NETWORK', 'TV', 'IRADIO', 'SAT/CBL', 'DOCK',
     'IPOD', 'NET/USB', 'RHAPSODY', 'PANDORA', 'LASTFM', 'IRP', 'FAVORITES', 'SERVER'
     @param {?string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @example
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getInput(function(error, data) {console.log('Input is: ' + data);}, 'ZM');
  */
 MarantzDenonTelnet.prototype.getInput = function(callback, zone) {
     var mdt = this;
@@ -175,6 +177,9 @@ MarantzDenonTelnet.prototype.getInput = function(callback, zone) {
     'IPOD', 'NET/USB', 'RHAPSODY', 'PANDORA', 'LASTFM', 'IRP', 'FAVORITES', 'SERVER'
     @param {defaultCallback} callback Function to be called when the command is run, and data returned
     @param {?string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @example
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.setInput('MPLAY', function(error, data) {console.log('Input of MAIN ZONE is set to: ' + data);});
  */
 MarantzDenonTelnet.prototype.setInput = function(input, callback, zone) {
     var commandPrefix = (!zone || (zone == 'ZM')) ? 'SI' : zone;

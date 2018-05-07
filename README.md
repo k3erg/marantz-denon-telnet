@@ -27,7 +27,7 @@ mdt.cmd('PW?', function(error, ret) {console.log(ret);}); // is the device turne
 
 
 
-### Tested on?
+## Tested on?
 
 marantz SR7011
 

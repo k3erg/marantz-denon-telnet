@@ -107,7 +107,7 @@ Send raw Telnet codes to the AVR.
 **Example**  
 ```js
 var mdt = new MarantzDenonTelnet('127.0.0.1');
-    mdt.cmd('PW?' function(error, data) {console.log('Power is: ' + data);});
+mdt.cmd('PW?' function(error, data) {console.log('Power is: ' + data);});
 ```
 
 * * *
@@ -125,6 +125,11 @@ Get the currently selected input of a zone.
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run, and data returned. Will return one or more of: 'CD', 'SPOTIFY', 'CBL/SAT', 'DVD', 'BD', 'GAME', 'GAME2', 'AUX1',     'MPLAY', 'USB/IPOD', 'TUNER', 'NETWORK', 'TV', 'IRADIO', 'SAT/CBL', 'DOCK',     'IPOD', 'NET/USB', 'RHAPSODY', 'PANDORA', 'LASTFM', 'IRP', 'FAVORITES', 'SERVER' |
 | zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
 
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getInput(function(error, data) {console.log('Input is: ' + data);}, 'ZM');
+```
 
 * * *
 
@@ -142,6 +147,11 @@ Select the input of a zone.
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run, and data returned |
 | zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
 
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.setInput('MPLAY', function(error, data) {console.log('Input of MAIN ZONE is set to: ' + data);});
+```
 
 * * *
 
