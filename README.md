@@ -13,7 +13,7 @@ This Packages only supports COMMAND and RESPONSE *for now*. EVENTS that get trig
 I.e. a connection to the AVR is opened to issue one or several COMMANDs and as soon as the last RESPONSE is in, it will be closed.
 
 ### marantz and DENON AVR control protocol
-According to [Denon AVR control protocol (http://www.us.marantz.com/DocumentMaster/US/Marantz_FY16_AV_SR_NR_PROTOCOL_V01(2).xls)] the following three data forms are defined.
+According to the <a href="http://www.us.marantz.com/DocumentMaster/US/Marantz_FY16_AV_SR_NR_PROTOCOL_V01(2).xls)">Denon AVR control protocol</a> the following three data forms are defined.
 
 Form | Purpose
 --- | ---
@@ -37,8 +37,9 @@ Simple commands just tell the AVR to do something. No data is returned by the ca
 ```javascript
 var MarantzDenonTelnet = require('marantz-denon-telnet');
 var mdt = new MarantzDenonTelnet(DEVICE_IP); // get an instance for a device at IP XXX.XXX.XXX.XXX
-mdt.cmd('PWON', function(error, ret) {console.log((error ? error : 'OK);}); // turns the device on
+mdt.cmd('PWON', function(error, ret) {console.log((error ? error : 'OK');}); // turns the device on
 ```
+
 ### ISSUE a request COMMAND
 If issuing a **request COMMAND** (commands that end with a **'?'** and expect an RESPONSE), the callback will return an array with  string for every line of the RESPONSE.
 
