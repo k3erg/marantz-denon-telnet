@@ -28,7 +28,7 @@ var MarantzDenonTelnet = function(ip) {
     this.connectionparams = {
         host: ip,
         port: 23,
-        timeout: 200,
+        timeout: 1000, //  The RESPONSE should be sent within 200ms of receiving the request COMMAND. (plus network delay)
         sendTimeout: 1200,
         negotiationMandatory: false
     };
@@ -87,16 +87,21 @@ MarantzDenonTelnet.prototype.sendNextTelnetCueItem = function() {
             this.connection.connect(this.connectionparams);
         } else {
             var item = this.cmdCue.shift();
-            this.connection.send(item.cmd, function(error, data) {
-                if (data) {
+            var isRequestCommand = (item.cmd.substr(-1) === '?');
+            this.connection.send(item.cmd, {timeout: (isRequestCommand ? this.connectionparams.timeout : 10)}, function(error, data) {
+                if (typeof data === 'string') {
                     data = data.trim().split('\r');
-                } else if (error && error.message === 'response not received') { // if the is no statechange, the AVR ist just noct responding
-                    data = {};
+                    for (var i = 0; i < data.lengt; i++) {                      // sanitize data
+                        data[i] = data[i].trim();
+                    }
+                } else if (error && !isRequestCommand && error.message === 'response not received') { // if it is no 'request COMMAND' the AVR will not respond
+                    data = [];
                     error = null;
                 }
-//                console.log('   sent: ' + item.cmd + (error ? ' error: ' + error.message : ' received: ' + JSON.stringify(data)));
                 item.callback(error, data);
-                mdt.sendNextTelnetCueItem();
+                setTimeout(function() {                                         // Send the COMMAND in 50ms or more intervals.
+                    mdt.sendNextTelnetCueItem();
+                }, 50);
             });
         }
     } else {
@@ -123,7 +128,7 @@ MarantzDenonTelnet.prototype.telnet = function(cmd, callback) {
 
 /**
     Send raw Telnet codes to the AVR.
-    @see marantz Telnet Reference {@link http://us.marantz.com/DocumentMaster/US/Marantz_AV_SR_NR_PROTOCOL_V02.xls}
+    @see marantz Telnet Reference {@link http://www.us.marantz.com/DocumentMaster/US/Marantz_FY16_AV_SR_NR_PROTOCOL_V01(2).xls}
     @param {string} cmd Telnet command
     @param {defaultCallback} callback Function to be called when the command is run, and data returned
     @example
