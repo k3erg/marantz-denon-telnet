@@ -10,7 +10,7 @@
     Function called when a command is run, and data returned.
     @callback defaultCallback
     @param {Error} error NULL or Error object, if command failed
-    @param {Array} data Array with returned data or NULL if command failed
+    @param {null|Object|Array|boolean} data Array with returned data or NULL if command failed
  */
 
 
@@ -206,6 +206,10 @@ MarantzDenonTelnet.prototype.setInput = function(input, callback, zone) {
     Telnet Command examples: SIMPLAY, Z2MPLAY, Z3CD
     @param {defaultCallback} callback Function to be called when the command is run, and data returned
     @param {?string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @example
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getMuteState(function(error, data) {console.log('Zone Zone 1 is ' + (data ? 'muted' : 'unmuted') + '.';}, 'Z1');
+// Zone Zone 1 is (un)muted.
  */
 MarantzDenonTelnet.prototype.getMuteState = function(callback, zone) {
     var commandPrefix = (!zone || (zone == 'ZM')) ? '' : zone;
@@ -228,6 +232,10 @@ MarantzDenonTelnet.prototype.getMuteState = function(callback, zone) {
     @param {boolean} muteState TRUE for muted
     @param {defaultCallback} callback Function to be called when the command is run, and data returned
     @param {?string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @example
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.setMuteState(true, function(error, data) {console.log('Sent mute command to Zone 2.');}, 'Z2');
+// Sent mute command to Zone 2.
  */
 MarantzDenonTelnet.prototype.setMuteState = function(muteState, callback, zone) {
     var commandPrefix = (!zone || (zone == 'ZM')) ? '' : zone;
@@ -247,6 +255,10 @@ MarantzDenonTelnet.prototype.setMuteState = function(muteState, callback, zone) 
     Get the current power state of the AVR.
     Telnet Command examples: PW?
     @param {defaultCallback} callback Function to be called when the command is run, and data returned
+    @example
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getPowerState(function(error, data) {console.log('AVR is powered' + (data ? 'on' : 'off') + '.';});
+// AVR is powered on|off.
  */
 MarantzDenonTelnet.prototype.getPowerState = function(callback) {
     this.telnet('PW?', function(error, data) {
@@ -265,6 +277,10 @@ MarantzDenonTelnet.prototype.getPowerState = function(callback) {
     Telnet Command examples: PWON, PWSTANDBY (threr is no PWOFF!)
     @param {boolean} powerState - TRUE to power the AVR on
     @param {defaultCallback} callback Function to be called when the command is run, and data returned
+    @example
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.setPowerState(false, function(error, data) {console.log('Sent power off command to AVR.');});
+// Sent power off command to AVR.
  */
 MarantzDenonTelnet.prototype.setPowerState = function(powerState, callback) {
     this.telnet('PW' + (powerState ? 'ON' : 'STANDBY'), function(error, data) {
@@ -284,6 +300,10 @@ MarantzDenonTelnet.prototype.setPowerState = function(powerState, callback) {
     Telnet Command examples: MV10, Z215
     @param {defaultCallback} callback Function to be called when the command is run, and data returned
     @param {?string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @example
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getVolume(function(error, data) {console.log('Volume of MAIN ZONE is ' + data + '.';});
+// Volume of MAIN ZONE is 20.
  */
 MarantzDenonTelnet.prototype.getVolume = function(callback, zone) {
     var mdt = this;
@@ -307,6 +327,10 @@ MarantzDenonTelnet.prototype.getVolume = function(callback, zone) {
     @param {number} volume 0-100
     @param {defaultCallback} callback Function to be called when the command is run, and data returned
     @param {?string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @example
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.setVolume(30, function(error, data) {console.log('Sent command to set Zone 2 volume to 30.');}, 'Z1');
+// ent command to set Zone 2 volume to 30.
  */
 MarantzDenonTelnet.prototype.setVolume = function(volume, callback, zone) {
     var commandPrefix = (!zone || (zone == 'ZM')) ? 'MV' : zone;
@@ -331,6 +355,10 @@ MarantzDenonTelnet.prototype.setVolume = function(volume, callback, zone) {
 /**
     Get all supported zones of the AVR.
     @param {defaultCallback} callback Function to be called when the command is run, and data returned
+    @example
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getZones(function(error, data) {console.log('Zones: ' + JSON.stringify(data);});
+// Zones: {Z1: 'MAIN ZONE', Z1: 'ZONE1', Z2: 'ZONE2'}
 */
 MarantzDenonTelnet.prototype.getZones = function(callback) {
     var mdt = this;
@@ -369,6 +397,10 @@ MarantzDenonTelnet.prototype.getZones = function(callback) {
     Telnet Command examples: PW?, Z2?, Z3?
     @param {defaultCallback} callback Function to be called when the command is run, and data returned
     @param {string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @example
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getZonePowerState(function(error, data) {console.log('Zone 2 is powered ' + (data ? 'on' : 'off') + '.';}, 'Z2');
+// Zone 2 is powered on|off.
  */
 MarantzDenonTelnet.prototype.getZonePowerState = function(callback, zone) {
     var commandPrefix = (!zone || (zone == 'ZM')) ? 'ZM' : zone;
@@ -390,6 +422,10 @@ MarantzDenonTelnet.prototype.getZonePowerState = function(callback, zone) {
     @param {boolean} powerState TRUE to power on
     @param {defaultCallback} callback Function to be called when the command is run, and data returned
     @param {string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @example
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.setZonePowerState(false, function(error, data) {console.log('Sent power off command to Zone 1.');}, 'Z1');
+// Sent power off command to Zone 1.
  */
 MarantzDenonTelnet.prototype.setZonePowerState = function(powerState, callback, zone) {
     var commandPrefix = (!zone || (zone == 'ZM')) ? 'MV' : zone;

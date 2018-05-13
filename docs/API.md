@@ -97,7 +97,7 @@ Low level method to add a command to the Telnet cue.
 Send raw Telnet codes to the AVR.
 
 **Kind**: instance method of [<code>MarantzDenonTelnet</code>](#MarantzDenonTelnet)  
-**See**: marantz Telnet Reference [http://us.marantz.com/DocumentMaster/US/Marantz_AV_SR_NR_PROTOCOL_V02.xls](http://us.marantz.com/DocumentMaster/US/Marantz_AV_SR_NR_PROTOCOL_V02.xls)  
+**See**: marantz Telnet Reference [http://www.us.marantz.com/DocumentMaster/US/Marantz_FY16_AV_SR_NR_PROTOCOL_V01(2).xls](http://www.us.marantz.com/DocumentMaster/US/Marantz_FY16_AV_SR_NR_PROTOCOL_V01(2).xls)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -169,6 +169,12 @@ Get the current mute state of a zone.
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run, and data returned |
 | zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
 
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getMuteState(function(error, data) {console.log('Zone Zone 1 is ' + (data ? 'muted' : 'unmuted') + '.';}, 'Z1');
+// Zone Zone 1 is (un)muted.
+```
 
 * * *
 
@@ -187,6 +193,12 @@ Set the mute state of a zone.
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run, and data returned |
 | zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
 
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.setMuteState(true, function(error, data) {console.log('Sent mute command to Zone 2.');}, 'Z2');
+// Sent mute command to Zone 2.
+```
 
 * * *
 
@@ -202,6 +214,12 @@ Get the current power state of the AVR.
 | --- | --- | --- |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run, and data returned |
 
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getPowerState(function(error, data) {console.log('AVR is powered' + (data ? 'on' : 'off') + '.';});
+// AVR is powered on|off.
+```
 
 * * *
 
@@ -218,6 +236,12 @@ Sets the power state of the AVR.
 | powerState | <code>boolean</code> | TRUE to power the AVR on |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run, and data returned |
 
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.setPowerState(false, function(error, data) {console.log('Sent power off command to AVR.');});
+// Sent power off command to AVR.
+```
 
 * * *
 
@@ -235,6 +259,12 @@ Get the current volume of a zone.
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run, and data returned |
 | zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
 
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getVolume(function(error, data) {console.log('Volume of MAIN ZONE is ' + data + '.';});
+// Volume of MAIN ZONE is 20.
+```
 
 * * *
 
@@ -253,6 +283,12 @@ Set the playback volume of a zone.
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run, and data returned |
 | zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
 
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.setVolume(30, function(error, data) {console.log('Sent command to set Zone 2 volume to 30.');}, 'Z1');
+// ent command to set Zone 2 volume to 30.
+```
 
 * * *
 
@@ -267,6 +303,12 @@ Get all supported zones of the AVR.
 | --- | --- | --- |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run, and data returned |
 
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getZones(function(error, data) {console.log('Zones: ' + JSON.stringify(data);});
+// Zones: {Z1: 'MAIN ZONE', Z1: 'ZONE1', Z2: 'ZONE2'}
+```
 
 * * *
 
@@ -283,6 +325,12 @@ Returns the current power state of a zone.
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run, and data returned |
 | zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
 
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getZonePowerState(function(error, data) {console.log('Zone 2 is powered ' + (data ? 'on' : 'off') + '.';}, 'Z2');
+// Zone 2 is powered on|off.
+```
 
 * * *
 
@@ -300,6 +348,12 @@ Sets the power state of a zone.
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run, and data returned |
 | zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
 
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.setZonePowerState(false, function(error, data) {console.log('Sent power off command to Zone 1.');}, 'Z1');
+// Sent power off command to Zone 1.
+```
 
 * * *
 
@@ -313,7 +367,7 @@ Function called when a command is run, and data returned.
 | Param | Type | Description |
 | --- | --- | --- |
 | error | <code>Error</code> | NULL or Error object, if command failed |
-| data | <code>Array</code> | Array with returned data or NULL if command failed |
+| data | <code>null</code> \| <code>Object</code> \| <code>Array</code> \| <code>boolean</code> | Array with returned data or NULL if command failed |
 
 
 * * *
