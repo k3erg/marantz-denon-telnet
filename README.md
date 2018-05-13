@@ -4,16 +4,17 @@ npm package to control marantz and Denon AVR over good ol' telnet.
 
 
 ## What does this package do?
-This package allows to control your marantz or Denon AVR over telnet. It was written to support the homebridge-marantz-denon-telnet package. You might want to install the marantz-denon-upnpdiscovery package as well, if you don't like to lookup your AVR's IP address by hand.
+This package allows to control your marantz or Denon AVR over telnet. It was written to support the [homebridge-marantz-denon-telnet](https://www.npmjs.com/package/marantz-denon-telnet) package. You might want to install the [marantz-denon-upnpdiscovery](https://www.npmjs.com/package/marantz-denon-upnpdiscovery) package as well, if you don't like to lookup your AVR's IP address by hand.
 
 
 
 ## What parts of the protocol are covered by this package?
-This Packages only supports COMMAND and RESPONSE *for now*. EVENTS that get triggered by Commands are omitted.
-I.e. a connection to the AVR is opened to issue one or several COMMANDs and as soon as the last RESPONSE is in, it will be closed.
+This packages only supports *COMMAND* and *RESPONSE* for now. *EVENTS* that get triggered by *COMMANDS* are omitted.
+I.e. a connection to the AVR is opened to issue one or several *COMMANDS* and as soon as the last *RESPONSE* is in, it will be closed.
+Further, this package will create a fifo-buffer that cues all commands, sent to the AVR. This is to respect the timeouts and intervals defined in the marantz and DENON AVR protocol and somewhat syncronise the *request COMMAND* and *RESPONSE* play.
 
 ### marantz and DENON AVR control protocol
-According to the <a href="http://www.us.marantz.com/DocumentMaster/US/Marantz_FY16_AV_SR_NR_PROTOCOL_V01(2).xls)">Denon AVR control protocol</a> the following three data forms are defined.
+According to the [Denon AVR control protocol](http://www.us.marantz.com/DocumentMaster/US/Marantz_FY16_AV_SR_NR_PROTOCOL_V01%282%29.xls) the following three data forms are defined.
 
 Form | Purpose
 --- | ---
@@ -31,17 +32,18 @@ npm install marantz-denon-telnet
 
 ## How to use this package?
 
-### Issue a simple COMMAND
-Simple commands just tell the AVR to do something. No data is returned by the callback , if the command was transfered succesfully. If not, the error-object for the callback is populated.
+### Issue a plain *COMMAND*
+Simple *COMMANDS* just tell the AVR to do something. No data is returned by the callback , if the command was transfered succesfully. If not, the error-object for the callback is populated.
 
 ```javascript
 var MarantzDenonTelnet = require('marantz-denon-telnet');
 var mdt = new MarantzDenonTelnet(DEVICE_IP); // get an instance for a device at IP XXX.XXX.XXX.XXX
-mdt.cmd('PWON', function(error, ret) {console.log((error ? error : 'OK');}); // turns the device on
+mdt.cmd('PWON', function(error, ret) {console.log((error ? error : 'Sent command to turn AVR on.');}); // turns the device on
+// ['Sent command to turn AVR on.']
 ```
 
-### ISSUE a request COMMAND
-If issuing a **request COMMAND** (commands that end with a **'?'** and expect an RESPONSE), the callback will return an array with  string for every line of the RESPONSE.
+### Issue a plain *request COMMAND*
+If issuing a *request COMMAND* (*COMMAND* that ends with a ```?``` and expect a *RESPONSE*), the callback will return an array with  string for every line of the *RESPONSE*.
 
 ```javascript
 var MarantzDenonTelnet = require('marantz-denon-telnet');
@@ -50,14 +52,14 @@ mdt.cmd('PW?', function(error, ret) {console.log(ret);}); // is the device turne
 // ['PWON']
 ```
 
-or use some predefined higher level methods:
-[API documentation](docs/API.md)
+### Using the higher level API
+A growing number of getter and setter methods like ```getPowerState()```, ```setVolume()```, ```setInput()``` are available [API documentation](docs/API.md).
 
 
 
 ## Tested on?
 
-marantz SR7011
+ * marantz SR7011
 
 
 
