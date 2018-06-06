@@ -53,7 +53,7 @@ mdt.cmd('PW?', function(error, ret) {console.log(ret);}); // is the device turne
 ```
 
 ### Using the higher level API
-A growing number of getter and setter methods like ```getPowerState()```, ```setVolume()```, ```setInput()``` are available [API documentation](docs/API.md).
+A growing number of getter and setter methods like ```getPowerState()```, ```setVolume()```, ```setInput()``` are available, just checkout the [API documentation](docs/API.md).
 
 
 
