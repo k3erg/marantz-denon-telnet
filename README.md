@@ -11,10 +11,10 @@ This package allows to control your marantz or Denon AVR over telnet. It was wri
 ## What parts of the protocol are covered by this package?
 This packages only supports *COMMAND* and *RESPONSE* for now. *EVENTS* that get triggered by *COMMANDS* are omitted.
 I.e. a connection to the AVR is opened to issue one or several *COMMANDS* and as soon as the last *RESPONSE* is in, it will be closed.
-Further, this package will create a fifo-buffer that cues all commands, sent to the AVR. This is to respect the timeouts and intervals defined in the marantz and DENON AVR protocol and somewhat syncronise the *request COMMAND* and *RESPONSE* play.
+Further, this package will create a fifo-buffer that cues all commands, sent to the AVR. This is to respect the timeouts and intervals defined in the marantz and DENON AVR protocol and somewhat syncronise the *request COMMAND* and *RESPONSE* play. Consider, that you can only have one connection open to an AVR at the same time.
 
 ### marantz and DENON AVR control protocol
-According to the [Denon AVR control protocol](http://www.us.marantz.com/DocumentMaster/US/Marantz_FY16_AV_SR_NR_PROTOCOL_V01%282%29.xls) the following three data forms are defined.
+According to the [Denon AVR control protocol](http://www.us.marantz.com/DocumentMaster/US/Marantz_FY16_AV_SR_NR_PROTOCOL_V01%282%29.xls) the following three data forms are defined:
 
 Form | Purpose
 --- | ---
