@@ -84,6 +84,15 @@ MarantzDenonTelnet.prototype.sendNextTelnetCueItem = function() {
             this.connection.on('connect', function() {
                 mdt.sendNextTelnetCueItem();
             });
+            this.connection.on('error', function() {
+                // There must be an item on the cmdCue, else we wouldn't be here...
+                // and node.js barfs if we don't catch this error. So lets catch it
+                // and use the first item in the cmdCue's error handler.
+                // Only quetion is, should we remove it from the queue or not?
+                mdt.cmdCue[0].callback('Failed to connect', null);
+                mdt.connection.end();
+                mdt.connection = null;
+            });
             this.connection.connect(this.connectionparams);
         } else {
             var item = this.cmdCue.shift();

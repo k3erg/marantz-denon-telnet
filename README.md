@@ -60,7 +60,14 @@ A growing number of getter and setter methods like ```getPowerState()```, ```set
 ## Tested on?
 
  * marantz SR7011
+ * Denon AVR-4310
  * Denon AVR-X1400H
+
+
+
+ ## Contributors
+ @k3erg
+ @ascl00
 
 
 
