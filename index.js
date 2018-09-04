@@ -203,7 +203,7 @@ MarantzDenonTelnet.prototype.setInput = function(input, callback, zone) {
 
     this.telnet(commandPrefix + input, function(error, data) {
         if (!error) {
-            callback(null);
+            callback(null, data);
         } else {
             callback(error);
         }
