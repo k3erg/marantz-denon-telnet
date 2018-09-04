@@ -66,8 +66,8 @@ A growing number of getter and setter methods like ```getPowerState()```, ```set
 
 
  ## Contributors
- @k3erg
- @ascl00
+  * [@k3erg](https://github.com/k3erg)
+  * [@ascl00](https://github.com/ascl00)
 
 
 
