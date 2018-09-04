@@ -30,7 +30,9 @@ var MarantzDenonTelnet = function(ip) {
         port: 23,
         timeout: 1000, //  The RESPONSE should be sent within 200ms of receiving the request COMMAND. (plus network delay)
         sendTimeout: 1200,
-        negotiationMandatory: false
+        negotiationMandatory: false,
+        ors: '\r', // Set outbound record separator
+        irs: '\r'
     };
     this.cmdCue = [];
     this.connection = null;
