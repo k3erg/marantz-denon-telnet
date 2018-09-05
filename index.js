@@ -102,7 +102,7 @@ MarantzDenonTelnet.prototype.sendNextTelnetCueItem = function() {
             this.connection.send(item.cmd, {timeout: (isRequestCommand ? this.connectionparams.timeout : 10)}, function(error, data) {
                 if (typeof data === 'string') {
                     data = data.trim().split('\r');
-                    for (var i = 0; i < data.lengt; i++) {                      // sanitize data
+                    for (var i = 0; i < data.length; i++) {                     // sanitize data
                         data[i] = data[i].trim();
                     }
                 } else if (error && !isRequestCommand && error.message === 'response not received') { // if it is no 'request COMMAND' the AVR will not respond
