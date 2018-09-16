@@ -99,7 +99,12 @@ MarantzDenonTelnet.prototype.sendNextTelnetCueItem = function() {
         } else {
             var item = this.cmdCue.shift();
             var isRequestCommand = (item.cmd.substr(-1) === '?');
-            this.connection.send(item.cmd, {timeout: (isRequestCommand ? this.connectionparams.timeout : 10)}, function(error, data) {
+            var send_options =  {timeout: (isRequestCommand ? this.connectionparams.timeout : 10)};
+            if (isRequestCommand)
+            {
+                send_options.waitfor = this.connectionparams.irs;
+            }
+            this.connection.send(item.cmd, send_options, function(error, data) {
                 if (typeof data === 'string') {
                     data = data.trim().split('\r');
                     for (var i = 0; i < data.length; i++) {                     // sanitize data
