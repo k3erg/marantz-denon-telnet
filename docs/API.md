@@ -487,7 +487,7 @@ Function called when a command is run and data is returned.
 | Param | Type | Description |
 | --- | --- | --- |
 | error | <code>Error</code> | NULL or Error object, if command failed |
-| data | <code>null</code> \| <code>Object</code> \| <code>Array</code> \| <code>boolean</code> | Array with returned data or NULL if command failed |
+| data | <code>null</code> \| <code>Object</code> \| <code>Array</code> \| <code>string</code> \| <code>boolean</code> | Array with returned data or NULL if command failed |
 
 
 * * *

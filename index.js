@@ -10,7 +10,7 @@
     Function called when a command is run and data is returned.
     @callback defaultCallback
     @param {Error} error NULL or Error object, if command failed
-    @param {null|Object|Array|boolean} data Array with returned data or NULL if command failed
+    @param {null|Object|Array|string|boolean} data Array with returned data or NULL if command failed
  */
 
 
