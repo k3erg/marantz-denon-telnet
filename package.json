@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/k3erg/marantz-denon-telnet#readme",
   "dependencies": {
-    "telnet-client": "^0.15.5"
+    "telnet-client": "^0.16.1"
   }
 }

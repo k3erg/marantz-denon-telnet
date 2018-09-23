@@ -44,7 +44,7 @@ var MarantzDenonTelnet = function(ip) {
     Search for the required information in returned data array, as they may contain additional and random data from EVENTs.
     @param {Array} data Array of possible responses
     @param {RegExp} regexp to test against
-    @return {Object} {PW: string, SI: string, SV: string, VL: string}
+    @return {!string} found string or false
  */
 MarantzDenonTelnet.prototype.parseSimpleResponse = function(data, regexp) {
     var i;
@@ -54,40 +54,6 @@ MarantzDenonTelnet.prototype.parseSimpleResponse = function(data, regexp) {
     for (i = 0; i < data.length; i++) {
         if (r = regexp.exec(data[i])) {
             return r[1];
-        }
-    }
-    return ret;
-};
-
-
-
-/**
-    Extract information from returned data arrays.
-    @param {Array} zoneInfo for Example ['Z240', 'SVOFF', 'Z2ON', 'Z2NET', 'Z240']
-    @return {Object} {PW: string, SI: string, SV: string, VL: string}
- */
-MarantzDenonTelnet.prototype.parseZoneInfo = function(zoneInfo) {
-    var i;
-    var ret = {};
-
-    for (i = 0; i < zoneInfo.length; i++) {
-        var item = zoneInfo[i];
-        var id = item.substr(0, 2);
-        var payLoad = item.substr(2);
-        if (item.substr(0, 1) === 'Z') {
-            if (payLoad.match(/^[0-9]*$/)) {
-                ret['VL'] = payLoad;
-            } else if (item.substr(2).match(/(ON|OFF)/)) {
-                ret['PW'] = payLoad;
-            } else {
-                ret['SI'] = payLoad;
-            }
-        } else if (id === 'MV' && payLoad.substr(0, 3) != 'MAX') {
-            ret['VL'] = payLoad;
-        } else if (id === 'SI') {
-            ret['SI'] = payLoad;
-        } else if (id === 'SV') {
-            ret['SV'] = payLoad;
         }
     }
     return ret;
@@ -125,6 +91,7 @@ MarantzDenonTelnet.prototype.sendNextTelnetCueItem = function() {
                 send_options.waitfor = item.waitfor;
             }
             this.connection.send(item.cmd, send_options, function(error, data) {
+//if (isRequestCommand) console.log(`\n\n\n${item.cmd}:${JSON.stringify(data)}`);
                 if (typeof data === 'string') {
                     data = data.trim().split('\r');
                     for (var i = 0; i < data.length; i++) {                     // sanitize data
@@ -161,8 +128,6 @@ MarantzDenonTelnet.prototype.telnet = function(cmd, callback, waitfor) {
 
 
 
-
-
 /**
     Send raw Telnet codes to the AVR.
     @see marantz Telnet Reference {@link http://www.us.marantz.com/DocumentMaster/US/Marantz_FY16_AV_SR_NR_PROTOCOL_V01(2).xls}
@@ -195,16 +160,20 @@ MarantzDenonTelnet.prototype.cmd = function(cmd, callback) {
     @example
 var mdt = new MarantzDenonTelnet('127.0.0.1');
 mdt.getInput(function(error, data) {console.log('INPUT of MAIN ZONE is: ' + JSON.stringify(data));}, 'ZM');
-// INPUT of MAIN ZONE is: {"SI":"MPLAY","SV":"OFF"}
+// INPUT of MAIN ZONE is: "MPLAY"
  */
 MarantzDenonTelnet.prototype.getInput = function(callback, zone) {
     var mdt = this;
     var commandPrefix = (!zone || (zone == 'ZM')) ? 'SI' : zone;
+    var regexp = RegExp('(?:^|[\r])' + commandPrefix + '([^O0-9]+[^NF]+)');
 
     this.telnet(commandPrefix + '?', function(error, data) {
         if (!error) {
-            var parsedData = mdt.parseZoneInfo(data);
-            callback(null, {SI: parsedData['SI'], SV: parsedData['SV']});
+            if (ret = mdt.parseSimpleResponse(data, regexp)) {
+                callback(null, ret);
+            } else {
+                callback('MarantzDenonTelnet: Did not get RESPONSE in time.');
+            }
         } else {
             callback(error);
         }
@@ -254,7 +223,7 @@ mdt.getMuteState(function(error, data) {console.log('MUTE state of ZONE2 is: ' +
 MarantzDenonTelnet.prototype.getMuteState = function(callback, zone) {
     var mdt = this;
     var commandPrefix = (!zone || (zone == 'ZM')) ? '' : zone;
-    var regexp = RegExp('^' + commandPrefix + '(ON|OFF)');
+    var regexp = RegExp('(?:^|[\r])' + commandPrefix + 'MU(ON|OFF)');
 
     this.telnet(commandPrefix + 'MU?', function(error, data) {
         var ret;
@@ -268,7 +237,7 @@ MarantzDenonTelnet.prototype.getMuteState = function(callback, zone) {
         } else {
             callback(error);
         }
-    });
+    }, regexp);
 };
 
 
@@ -310,7 +279,7 @@ mdt.getPowerState(function(error, data) {console.log('POWER state of AVR is: ' +
  */
 MarantzDenonTelnet.prototype.getPowerState = function(callback) {
     var mdt = this;
-    var regexp = RegExp(/^PW(ON|OFF)/);
+    var regexp = RegExp(/PW(ON|OFF)/);
 
     this.telnet('PW?', function(error, data) {
         var ret;
@@ -324,7 +293,7 @@ MarantzDenonTelnet.prototype.getPowerState = function(callback) {
         } else {
             callback("Can't connect to device: " + error, false);
         }
-    });
+    }, regexp);
 };
 
 
@@ -365,7 +334,7 @@ mdt.getVolume(function(error, data) {console.log('VOLUME of MAIN ZONE is: ' + da
 MarantzDenonTelnet.prototype.getVolume = function(callback, zone) {
     var mdt = this;
     var commandPrefix = (!zone || (zone == 'ZM')) ? 'MV' : zone;
-    var regexp = RegExp('^' + commandPrefix + '(\\d+)');
+    var regexp = RegExp('(?:^|[\r])' + commandPrefix + '(\\d+)');
 
     this.telnet(commandPrefix + '?', function(error, data) {
         var ret;
@@ -379,7 +348,7 @@ MarantzDenonTelnet.prototype.getVolume = function(callback, zone) {
         } else {
             callback(error);
         }
-    });
+    }, regexp);
 };
 
 
@@ -481,7 +450,7 @@ mdt.getZonePowerState(function(error, data) {console.log('POWER state of ZONE3 i
 MarantzDenonTelnet.prototype.getZonePowerState = function(callback, zone) {
     var mdt = this;
     var commandPrefix = (!zone || (zone == 'ZM')) ? 'ZM' : zone;
-    var regexp = RegExp('^' + commandPrefix + '(ON|OFF)');
+    var regexp = RegExp('(?:^|[\r])' + commandPrefix + '(ON|OFF)');
 
     this.telnet(commandPrefix + '?', function(error, data) {
         var ret;
@@ -495,7 +464,7 @@ MarantzDenonTelnet.prototype.getZonePowerState = function(callback, zone) {
         } else {
             callback(error);
         }
-    });
+    }, regexp);
 };
 
 
