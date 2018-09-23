@@ -41,6 +41,27 @@ var MarantzDenonTelnet = function(ip) {
 
 
 /**
+    Search for the required information in returned data array, as they may contain additional and random data from EVENTs.
+    @param {Array} data Array of possible responses
+    @param {RegExp} regexp to test against
+    @return {Object} {PW: string, SI: string, SV: string, VL: string}
+ */
+MarantzDenonTelnet.prototype.parseSimpleResponse = function(data, regexp) {
+    var i;
+    var ret = false;
+    var r = false;
+
+    for (i = 0; i < data.length; i++) {
+        if (r = regexp.exec(data[i])) {
+            return r[1];
+        }
+    }
+    return ret;
+};
+
+
+
+/**
     Extract information from returned data arrays.
     @param {Array} zoneInfo for Example ['Z240', 'SVOFF', 'Z2ON', 'Z2NET', 'Z240']
     @return {Object} {PW: string, SI: string, SV: string, VL: string}
@@ -226,11 +247,19 @@ mdt.getMuteState(function(error, data) {console.log('MUTE state of ZONE2 is: ' +
 // MUTE state of ZONE2 is: [ON|OFF]
  */
 MarantzDenonTelnet.prototype.getMuteState = function(callback, zone) {
+    var mdt = this;
     var commandPrefix = (!zone || (zone == 'ZM')) ? '' : zone;
+    var regexp = RegExp('^' + commandPrefix + '(ON|OFF)');
 
     this.telnet(commandPrefix + 'MU?', function(error, data) {
+        var ret;
+
         if (!error) {
-            callback(null, (data[0] == commandPrefix + 'MUON'));
+            if (ret = mdt.parseSimpleResponse(data, regexp)) {
+                callback(null, (ret == 'ON'));
+            } else {
+                callback('MarantzDenonTelnet: Did not get RESPONSE in time.');
+            }
         } else {
             callback(error);
         }
@@ -275,9 +304,18 @@ mdt.getPowerState(function(error, data) {console.log('POWER state of AVR is: ' +
 // POWER state of AVR is: [ON|OFF]
  */
 MarantzDenonTelnet.prototype.getPowerState = function(callback) {
+    var mdt = this;
+    var regexp = RegExp(/^PW(ON|OFF)/);
+
     this.telnet('PW?', function(error, data) {
+        var ret;
+
         if (!error) {
-            callback(null, (data[0] == 'PWON'));
+            if (ret = mdt.parseSimpleResponse(data, regexp)) {
+                callback(null, (ret == 'ON'));
+            } else {
+                callback('MarantzDenonTelnet: Did not get RESPONSE in time.');
+            }
         } else {
             callback("Can't connect to device: " + error, false);
         }
@@ -322,10 +360,17 @@ mdt.getVolume(function(error, data) {console.log('VOLUME of MAIN ZONE is: ' + da
 MarantzDenonTelnet.prototype.getVolume = function(callback, zone) {
     var mdt = this;
     var commandPrefix = (!zone || (zone == 'ZM')) ? 'MV' : zone;
+    var regexp = RegExp('^' + commandPrefix + '(\\d+)');
 
     this.telnet(commandPrefix + '?', function(error, data) {
+        var ret;
+
         if (!error) {
-            callback(null, parseInt((mdt.parseZoneInfo(data)['VL'] + '0').substring(0, 3), 10) * 0.1);
+            if (ret = mdt.parseSimpleResponse(data, regexp)) {
+                callback(null, parseInt((ret + '0').substr(0, 3), 10) * 0.1);
+            } else {
+                callback('MarantzDenonTelnet: Did not get RESPONSE in time.');
+            }
         } else {
             callback(error);
         }
@@ -376,14 +421,21 @@ mdt.getZones(function(error, data) {console.log('Available Zones: ' + JSON.strin
 */
 MarantzDenonTelnet.prototype.getZones = function(callback) {
     var mdt = this;
-    var zoneIds = ['ZM', 'Z2', 'Z3', 'Z4', 'Z5', 'Z6', 'Z7', 'Z8', 'Z9'];
+    var zoneIds = ['', 'ZM', 'Z2', 'Z3', 'Z4', 'Z5', 'Z6', 'Z7', 'Z8', 'Z9'];
     var zones = {};
 
     // get number of zones (PW? -> ["PWON","Z2ON","Z3ON"])
     var handleZoneIds = function(err, data) {
+        var regexp = RegExp(/(Z\d)ON/);
+        var ret;
+
         if (data) {
             for (i = 0; i < data.length; i++) {
-                zones[zoneIds[i]] = zoneIds[i];
+                if (ret = regexp.exec(data[i])) {
+                    zones[ret[1]] = ret[1];
+                } else if (data[i] == 'PWON') {
+                    zones['ZM'] = 'ZM';
+                }
             }
         }
         mdt.telnet('RR?', handleZoneNames);
@@ -391,11 +443,16 @@ MarantzDenonTelnet.prototype.getZones = function(callback) {
 
     // Try to get zone names supported by recent AVR (RR? -> ["R1MAIN ZONE ","R2ZONE2     ","R3ZONE3"])
     var handleZoneNames = function(err, data) {
+        var regexp = RegExp(/R(\d)(.*)/);
+        var ret;
         var zoneName;
+
         if (data) {
             for (i = 0; i < data.length; i++) {
-                zoneName = data[i].trim().substr(2);
-                zones[zoneIds[i]] = zoneName;
+                if (ret = regexp.exec(data[i])) {
+                    zoneName = data[i].trim().substr(2);
+                    zones[zoneIds[parseInt(ret[1], 10)]] = zoneName;
+                }
             }
         }
         callback(null, zones);                                                  // whatever happens, we finally go on
@@ -417,11 +474,19 @@ mdt.getZonePowerState(function(error, data) {console.log('POWER state of ZONE3 i
 // POWER state of ZONE3 is: [ON|OFF]
  */
 MarantzDenonTelnet.prototype.getZonePowerState = function(callback, zone) {
+    var mdt = this;
     var commandPrefix = (!zone || (zone == 'ZM')) ? 'ZM' : zone;
+    var regexp = RegExp('^' + commandPrefix + '(ON|OFF)');
 
     this.telnet(commandPrefix + '?', function(error, data) {
+        var ret;
+
         if (!error) {
-            callback(null, (data[0] == commandPrefix + 'ON'));
+            if (ret = mdt.parseSimpleResponse(data, regexp)) {
+                callback(null, (ret == 'ON'));
+            } else {
+                callback('MarantzDenonTelnet: Did not get RESPONSE in time.');
+            }
         } else {
             callback(error);
         }

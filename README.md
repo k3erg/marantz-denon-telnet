@@ -1,3 +1,7 @@
+[![NPM](https://nodei.co/npm/marantz-denon-telnet.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/marantz-denon-telnet/)
+
+
+
 # marantz-denon-telnet
 npm package to control marantz and Denon AVR over good ol' telnet.
 
