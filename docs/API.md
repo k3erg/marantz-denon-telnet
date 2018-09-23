@@ -20,9 +20,9 @@
 
 * [MarantzDenonTelnet](#MarantzDenonTelnet)
     * [new MarantzDenonTelnet(ip)](#new_MarantzDenonTelnet_new)
-    * [.parseZoneInfo(zoneInfo)](#MarantzDenonTelnet+parseZoneInfo) ⇒ <code>Object</code>
+    * [.parseSimpleResponse(data, regexp)](#MarantzDenonTelnet+parseSimpleResponse) ⇒ <code>string</code>
     * [.sendNextTelnetCueItem()](#MarantzDenonTelnet+sendNextTelnetCueItem)
-    * [.telnet(cmd, callback)](#MarantzDenonTelnet+telnet)
+    * [.telnet(cmd, callback, waitfor)](#MarantzDenonTelnet+telnet)
     * [.cmd(cmd, callback)](#MarantzDenonTelnet+cmd)
     * [.getInput(callback, zone)](#MarantzDenonTelnet+getInput)
     * [.setInput(input, callback, zone)](#MarantzDenonTelnet+setInput)
@@ -30,6 +30,11 @@
     * [.setMuteState(muteState, callback, zone)](#MarantzDenonTelnet+setMuteState)
     * [.getPowerState(callback)](#MarantzDenonTelnet+getPowerState)
     * [.setPowerState(powerState, callback)](#MarantzDenonTelnet+setPowerState)
+    * [.getSmartSelect(callback, zone)](#MarantzDenonTelnet+getSmartSelect)
+    * [.setSmartSelect(input, callback, zone)](#MarantzDenonTelnet+setSmartSelect)
+    * [.storeSmartSelect(input, callback)](#MarantzDenonTelnet+storeSmartSelect)
+    * [.getVideoSelect(callback)](#MarantzDenonTelnet+getVideoSelect)
+    * [.setVideoSelect(input, callback)](#MarantzDenonTelnet+setVideoSelect)
     * [.getVolume(callback, zone)](#MarantzDenonTelnet+getVolume)
     * [.setVolume(volume, callback, zone)](#MarantzDenonTelnet+setVolume)
     * [.getZones(callback)](#MarantzDenonTelnet+getZones)
@@ -52,17 +57,18 @@ Returns an instance of MarantzDenonTelnet that can handle telnet commands to the
 
 * * *
 
-<a name="MarantzDenonTelnet+parseZoneInfo"></a>
+<a name="MarantzDenonTelnet+parseSimpleResponse"></a>
 
-### marantzDenonTelnet.parseZoneInfo(zoneInfo) ⇒ <code>Object</code>
-Extract information from returned data arrays.
+### marantzDenonTelnet.parseSimpleResponse(data, regexp) ⇒ <code>string</code>
+Search for the required information in returned data array, as they may contain additional and random data from EVENTs.
 
 **Kind**: instance method of [<code>MarantzDenonTelnet</code>](#MarantzDenonTelnet)  
-**Returns**: <code>Object</code> - {PW: string, SI: string, SV: string, VL: string}  
+**Returns**: <code>string</code> - found string or false  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| zoneInfo | <code>Array</code> | for Example ['Z240', 'SVOFF', 'Z2ON', 'Z2NET', 'Z240'] |
+| data | <code>Array</code> | Array of possible responses |
+| regexp | <code>RegExp</code> | to test against |
 
 
 * * *
@@ -87,7 +93,7 @@ Low level method to add a command to the Telnet cue.
 | --- | --- | --- |
 | cmd | <code>string</code> | Telnet command |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned |
-| waitfor | <code>RegExp<code> | waitfor Wait for this regexp to fulfill instead of a timeout. |
+| waitfor | <code>RegExp</code> | Wait for this regexp to fulfill instead of a timeout. |
 
 
 * * *
@@ -131,7 +137,7 @@ Get the currently selected input of a zone.
 ```js
 var mdt = new MarantzDenonTelnet('127.0.0.1');
 mdt.getInput(function(error, data) {console.log('INPUT of MAIN ZONE is: ' + JSON.stringify(data));}, 'ZM');
-// INPUT of MAIN ZONE is: {"SI":"MPLAY","SV":"OFF"}
+// INPUT of MAIN ZONE is: "MPLAY"
 ```
 
 * * *
@@ -245,6 +251,116 @@ Sets the power state of the AVR.
 var mdt = new MarantzDenonTelnet('127.0.0.1');
 mdt.setPowerState(false, function(error, data) {console.log('Sent power off command to AVR.');});
 // Set POWER state of AVR to ON.
+```
+
+* * *
+
+<a name="MarantzDenonTelnet+getSmartSelect"></a>
+
+### marantzDenonTelnet.getSmartSelect(callback, zone)
+Get the currently selected SMART SELECT of a zone.
+    Telnet Command examples: MSSMART ?, Z2SMART ?
+
+**Kind**: instance method of [<code>MarantzDenonTelnet</code>](#MarantzDenonTelnet)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned. |
+| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z2 ... Zn for all others |
+
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getSmartSelect(function(error, data) {console.log('SMART SELECT is: ' + JSON.stringify(data));}, 'SMART');
+// SMART SELECT is: "0"
+```
+
+* * *
+
+<a name="MarantzDenonTelnet+setSmartSelect"></a>
+
+### marantzDenonTelnet.setSmartSelect(input, callback, zone)
+Select the SMART SELECT of a zone.
+    Telnet Command examples: SMART1, SMART2
+
+**Kind**: instance method of [<code>MarantzDenonTelnet</code>](#MarantzDenonTelnet)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| input | <code>number</code> | Supported values: 1 ... 5 |
+| callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned |
+| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z2 ... Zn for all others |
+
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.setSmartSelect(1, function(error, data) {console.log('Set SMART SELECT of MAIN ZONE to 1.');});
+// Set SMART SELECT of MAIN ZONE to 1.
+```
+
+* * *
+
+<a name="MarantzDenonTelnet+storeSmartSelect"></a>
+
+### marantzDenonTelnet.storeSmartSelect(input, callback)
+Store current setup to SMART SELECT of a zone.
+    Telnet Command examples: SMART1 MEMORY, SMART2 MEMORY
+
+**Kind**: instance method of [<code>MarantzDenonTelnet</code>](#MarantzDenonTelnet)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| input | <code>number</code> | Supported values: 1 ... 5 |
+| callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned |
+
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.storeSmartSelect(1, function(error, data) {console.log('Store current settings to SMART SELECT of MAIN ZONE.');});
+// Store current settings to SMART SELECT of MAIN ZONE.
+```
+
+* * *
+
+<a name="MarantzDenonTelnet+getVideoSelect"></a>
+
+### marantzDenonTelnet.getVideoSelect(callback)
+Get the currently selected video source.
+    Telnet Command examples: SV?
+
+**Kind**: instance method of [<code>MarantzDenonTelnet</code>](#MarantzDenonTelnet)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned. Will return one or more of:     'DVD', 'BD', 'TV', 'SAT/CBL', 'MPLAY', 'GAME', 'AUX1', 'AUX2', 'AUX3', 'AUX4'      'AUX5', 'AUX6', 'AUX7', 'CD', 'SOURCE', 'ON', 'OFF' |
+
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.getVideoSelect(function(error, data) {console.log('VIDEO SELECT of MAIN ZONE is: ' + JSON.stringify(data));}, 'ZM');
+// VIDEO SELECT is: "OFF"
+```
+
+* * *
+
+<a name="MarantzDenonTelnet+setVideoSelect"></a>
+
+### marantzDenonTelnet.setVideoSelect(input, callback)
+Select the video source.
+    Telnet Command examples: SVBD, SVDVD, SVCD
+
+**Kind**: instance method of [<code>MarantzDenonTelnet</code>](#MarantzDenonTelnet)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| input | <code>string</code> | Supported values: 'DVD', 'BD', 'TV', 'SAT/CBL', 'MPLAY',     'GAME', 'AUX1', 'AUX2', 'AUX3', 'AUX4', 'AUX5', 'AUX6', 'AUX7', 'CD', 'SOURCE', 'ON', 'OFF' |
+| callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned |
+
+**Example**  
+```js
+var mdt = new MarantzDenonTelnet('127.0.0.1');
+mdt.setVideoSelect('MPLAY', function(error, data) {console.log('Set VIDEO SELECT of MAIN ZONE to MPLAY.');});
+// Set VIDEO SELECT to MPLAY.
 ```
 
 * * *
@@ -375,3 +491,4 @@ Function called when a command is run and data is returned.
 
 
 * * *
+
