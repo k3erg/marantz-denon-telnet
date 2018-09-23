@@ -78,7 +78,7 @@ Works thru Telnet cue.
 
 <a name="MarantzDenonTelnet+telnet"></a>
 
-### marantzDenonTelnet.telnet(cmd, callback)
+### marantzDenonTelnet.telnet(cmd, callback, waitfor)
 Low level method to add a command to the Telnet cue.
 
 **Kind**: instance method of [<code>MarantzDenonTelnet</code>](#MarantzDenonTelnet)  
@@ -87,6 +87,7 @@ Low level method to add a command to the Telnet cue.
 | --- | --- | --- |
 | cmd | <code>string</code> | Telnet command |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned |
+| waitfor | <code>RegExp<code> | waitfor Wait for this regexp to fulfill instead of a timeout. |
 
 
 * * *

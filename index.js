@@ -120,7 +120,7 @@ MarantzDenonTelnet.prototype.sendNextTelnetCueItem = function() {
         } else {
             var item = this.cmdCue.shift();
             var isRequestCommand = (item.cmd.substr(-1) === '?');
-            var send_options =  {timeout: (isRequestCommand ? this.connectionparams.timeout : 10)};
+            var send_options = {timeout: (isRequestCommand ? this.connectionparams.timeout : 10)};
             if (typeof item.waitfor !== 'undefined') {
                 send_options.waitfor = item.waitfor;
             }
