@@ -186,7 +186,7 @@ MarantzDenonTelnet.prototype.cmd = function(cmd, callback) {
     @param {defaultCallback} callback Function to be called when the command is run and data is returned. Will return one or more of: 'CD', 'SPOTIFY', 'CBL/SAT', 'DVD', 'BD', 'GAME', 'GAME2', 'AUX1',
     'MPLAY', 'USB/IPOD', 'TUNER', 'NETWORK', 'TV', 'IRADIO', 'SAT/CBL', 'DOCK',
     'IPOD', 'NET/USB', 'RHAPSODY', 'PANDORA', 'LASTFM', 'IRP', 'FAVORITES', 'SERVER'
-    @param {?string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @param {?string} zone NULL or ZM for MAIN ZONE, Z2 ... Zn for all others
     @example
 var mdt = new MarantzDenonTelnet('127.0.0.1');
 mdt.getInput(function(error, data) {console.log('INPUT of MAIN ZONE is: ' + JSON.stringify(data));}, 'ZM');
@@ -215,7 +215,7 @@ MarantzDenonTelnet.prototype.getInput = function(callback, zone) {
     'MPLAY', 'USB/IPOD', 'TUNER', 'NETWORK', 'TV', 'IRADIO', 'SAT/CBL', 'DOCK',
     'IPOD', 'NET/USB', 'RHAPSODY', 'PANDORA', 'LASTFM', 'IRP', 'FAVORITES', 'SERVER'
     @param {defaultCallback} callback Function to be called when the command is run and data is returned
-    @param {?string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @param {?string} zone NULL or ZM for MAIN ZONE, Z2 ... Zn for all others
     @example
 var mdt = new MarantzDenonTelnet('127.0.0.1');
 mdt.setInput('MPLAY', function(error, data) {console.log('Set INPUT of MAIN ZONE to MPLAY.');});
@@ -240,7 +240,7 @@ MarantzDenonTelnet.prototype.setInput = function(input, callback, zone) {
     Defaults MAIN ZONE, if no zone set.
     Telnet Command examples: SIMPLAY, Z2MPLAY, Z3CD
     @param {defaultCallback} callback Function to be called when the command is run and data is returned
-    @param {?string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @param {?string} zone NULL or ZM for MAIN ZONE, Z2 ... Zn for all others
     @example
 var mdt = new MarantzDenonTelnet('127.0.0.1');
 mdt.getMuteState(function(error, data) {console.log('MUTE state of ZONE2 is: ' + (data ? 'ON' : 'OFF'));}, 'Z2');
@@ -274,7 +274,7 @@ MarantzDenonTelnet.prototype.getMuteState = function(callback, zone) {
     Telnet Command examples: MUON, MUOFF, Z2MUON, Z3MUOFF
     @param {boolean} muteState TRUE for muted
     @param {defaultCallback} callback Function to be called when the command is run and data is returned
-    @param {?string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @param {?string} zone NULL or ZM for MAIN ZONE, Z2 ... Zn for all others
     @example
 var mdt = new MarantzDenonTelnet('127.0.0.1');
 mdt.setMuteState(true, function(error, data) {console.log('Set MUTE state of ZONE2 to ON.');}, 'Z2');
@@ -351,7 +351,7 @@ MarantzDenonTelnet.prototype.setPowerState = function(powerState, callback) {
     There is no MAIN ZONE Volue, its handled by the Mastervolume (MV)
     Telnet Command examples: MV10, Z215
     @param {defaultCallback} callback Function to be called when the command is run and data is returned
-    @param {?string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @param {?string} zone NULL or ZM for MAIN ZONE, Z2 ... Zn for all others
     @example
 var mdt = new MarantzDenonTelnet('127.0.0.1');
 mdt.getVolume(function(error, data) {console.log('VOLUME of MAIN ZONE is: ' + data);}, 'ZM');
@@ -385,7 +385,7 @@ MarantzDenonTelnet.prototype.getVolume = function(callback, zone) {
     Telnet Command examples: MV20, Z230, Z340
     @param {number} volume 0-100
     @param {defaultCallback} callback Function to be called when the command is run and data is returned
-    @param {?string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @param {?string} zone NULL or ZM for MAIN ZONE, Z2 ... Zn for all others
     @example
 var mdt = new MarantzDenonTelnet('127.0.0.1');
 mdt.setVolume(30, function(error, data) {console.log('Set VOLUME of MAIN ZONE to 30.');}, 'ZM');
@@ -467,7 +467,7 @@ MarantzDenonTelnet.prototype.getZones = function(callback) {
     Returns the current power state of a zone.
     Telnet Command examples: PW?, Z2?, Z3?
     @param {defaultCallback} callback Function to be called when the command is run and data is returned
-    @param {string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @param {string} zone NULL or ZM for MAIN ZONE, Z2 ... Zn for all others
     @example
 var mdt = new MarantzDenonTelnet('127.0.0.1');
 mdt.getZonePowerState(function(error, data) {console.log('POWER state of ZONE3 is: ' + (data ? 'ON' : 'OFF'));}, 'Z3');
@@ -500,7 +500,7 @@ MarantzDenonTelnet.prototype.getZonePowerState = function(callback, zone) {
     Telnet Command examples: PWON, PWSTANDBY, Z2ON, Z3OFF
     @param {boolean} powerState TRUE to power on
     @param {defaultCallback} callback Function to be called when the command is run and data is returned
-    @param {string} zone NULL or ZM for MAIN ZONE, Z1 ... Zn for all others
+    @param {string} zone NULL or ZM for MAIN ZONE, Z2 ... Zn for all others
     @example
 var mdt = new MarantzDenonTelnet('127.0.0.1');
 mdt.setZonePowerState(false, function(error, data) {console.log('Set POWER state of ZONE3 to OFF.');}, 'Z3');

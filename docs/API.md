@@ -124,7 +124,7 @@ Get the currently selected input of a zone.
 | Param | Type | Description |
 | --- | --- | --- |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned. Will return one or more of: 'CD', 'SPOTIFY', 'CBL/SAT', 'DVD', 'BD', 'GAME', 'GAME2', 'AUX1',     'MPLAY', 'USB/IPOD', 'TUNER', 'NETWORK', 'TV', 'IRADIO', 'SAT/CBL', 'DOCK',     'IPOD', 'NET/USB', 'RHAPSODY', 'PANDORA', 'LASTFM', 'IRP', 'FAVORITES', 'SERVER' |
-| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
+| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z2 ... Zn for all others |
 
 **Example**  
 ```js
@@ -147,7 +147,7 @@ Select the input of a zone.
 | --- | --- | --- |
 | input | <code>string</code> | Supported values: 'CD', 'SPOTIFY', 'CBL/SAT', 'DVD', 'BD', 'GAME', 'GAME2', 'AUX1',     'MPLAY', 'USB/IPOD', 'TUNER', 'NETWORK', 'TV', 'IRADIO', 'SAT/CBL', 'DOCK',     'IPOD', 'NET/USB', 'RHAPSODY', 'PANDORA', 'LASTFM', 'IRP', 'FAVORITES', 'SERVER' |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned |
-| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
+| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z2 ... Zn for all others |
 
 **Example**  
 ```js
@@ -170,7 +170,7 @@ Get the current mute state of a zone.
 | Param | Type | Description |
 | --- | --- | --- |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned |
-| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
+| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z2 ... Zn for all others |
 
 **Example**  
 ```js
@@ -194,7 +194,7 @@ Set the mute state of a zone.
 | --- | --- | --- |
 | muteState | <code>boolean</code> | TRUE for muted |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned |
-| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
+| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z2 ... Zn for all others |
 
 **Example**  
 ```js
@@ -260,7 +260,7 @@ Get the current volume of a zone.
 | Param | Type | Description |
 | --- | --- | --- |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned |
-| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
+| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z2 ... Zn for all others |
 
 **Example**  
 ```js
@@ -284,7 +284,7 @@ Set the playback volume of a zone.
 | --- | --- | --- |
 | volume | <code>number</code> | 0-100 |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned |
-| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
+| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z2 ... Zn for all others |
 
 **Example**  
 ```js
@@ -326,7 +326,7 @@ Returns the current power state of a zone.
 | Param | Type | Description |
 | --- | --- | --- |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned |
-| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
+| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z2 ... Zn for all others |
 
 **Example**  
 ```js
@@ -349,7 +349,7 @@ Sets the power state of a zone.
 | --- | --- | --- |
 | powerState | <code>boolean</code> | TRUE to power on |
 | callback | [<code>defaultCallback</code>](#defaultCallback) | Function to be called when the command is run and data is returned |
-| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z1 ... Zn for all others |
+| zone | <code>string</code> | NULL or ZM for MAIN ZONE, Z2 ... Zn for all others |
 
 **Example**  
 ```js
@@ -374,4 +374,3 @@ Function called when a command is run and data is returned.
 
 
 * * *
-
