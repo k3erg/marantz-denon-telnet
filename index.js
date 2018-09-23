@@ -120,7 +120,11 @@ MarantzDenonTelnet.prototype.sendNextTelnetCueItem = function() {
         } else {
             var item = this.cmdCue.shift();
             var isRequestCommand = (item.cmd.substr(-1) === '?');
-            this.connection.send(item.cmd, {timeout: (isRequestCommand ? this.connectionparams.timeout : 10)}, function(error, data) {
+            var send_options =  {timeout: (isRequestCommand ? this.connectionparams.timeout : 10)};
+            if (typeof item.waitfor !== 'undefined') {
+                send_options.waitfor = item.waitfor;
+            }
+            this.connection.send(item.cmd, send_options, function(error, data) {
                 if (typeof data === 'string') {
                     data = data.trim().split('\r');
                     for (var i = 0; i < data.length; i++) {                     // sanitize data
@@ -146,9 +150,10 @@ MarantzDenonTelnet.prototype.sendNextTelnetCueItem = function() {
     Low level method to add a command to the Telnet cue.
     @param {string} cmd Telnet command
     @param {defaultCallback} callback Function to be called when the command is run and data is returned
+    @param {?RegExp} waitfor Wait for this regexp to fulfill instead of a timeout.
  */
-MarantzDenonTelnet.prototype.telnet = function(cmd, callback) {
-    this.cmdCue.push({'cmd': cmd, 'callback': callback});
+MarantzDenonTelnet.prototype.telnet = function(cmd, callback, waitfor) {
+    this.cmdCue.push({'cmd': cmd, 'callback': callback, 'waitfor': waitfor});
     if (!this.connection) {
         this.sendNextTelnetCueItem();
     }
